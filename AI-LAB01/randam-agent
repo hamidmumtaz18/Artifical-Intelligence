@@ -1,1 +1,116 @@
-
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyN5+66l6JteGpyW1pSjsFip",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/hamidmumtaz18/Artifical-Intelligence/blob/main/AI-LAB01/randam-agent\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "jvqKcC-mWg9S",
+        "outputId": "2624a5e2-80ea-4631-a65c-3a8a91aed1c1",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Random agent scores: [7, -15, -10, -11, -6, 4, -3, -5, -6, 9]\n",
+            "Reflex agent scores: [2, -20, -20, -20, -9, 2, -9, -9, -9, 2]\n",
+            "Random agent average: -3.6\n",
+            "Reflex agent average: -9\n"
+          ]
+        }
+      ],
+      "source": [
+        "\n",
+        "import random\n",
+        "import statistics\n",
+        "\n",
+        "def run_agent(seed, agent_type, steps=20):\n",
+        "    rng = random.Random(seed)\n",
+        "\n",
+        "    # Generate a random initial state\n",
+        "    rooms = {\n",
+        "        'A': rng.randint(0, 1),\n",
+        "        'B': rng.randint(0, 1)\n",
+        "    }\n",
+        "    location = rng.choice(['A', 'B'])\n",
+        "\n",
+        "    score = 0\n",
+        "\n",
+        "    for _ in range(steps):\n",
+        "        # Choose an action\n",
+        "        if agent_type == \"Random\":\n",
+        "            action = rng.choice(['Left', 'Right', 'Suck'])\n",
+        "        else:\n",
+        "            if rooms[location] == 1:\n",
+        "                action = 'Suck'\n",
+        "            elif location == 'A':\n",
+        "                action = 'Right'\n",
+        "            else:\n",
+        "                action = 'Left'\n",
+        "\n",
+        "        # Execute the action and calculate score\n",
+        "        if action == 'Suck':\n",
+        "            if rooms[location] == 1:\n",
+        "                score += 10\n",
+        "            rooms[location] = 0\n",
+        "\n",
+        "        elif action == 'Left':\n",
+        "            location = 'A'\n",
+        "            score -= 1\n",
+        "\n",
+        "        elif action == 'Right':\n",
+        "            location = 'B'\n",
+        "            score -= 1\n",
+        "\n",
+        "    return score\n",
+        "\n",
+        "\n",
+        "random_scores = []\n",
+        "reflex_scores = []\n",
+        "\n",
+        "# Test on 10 random initial states, 20 steps per trial\n",
+        "for seed in range(10):\n",
+        "    random_scores.append(run_agent(seed, \"Random\", 20))\n",
+        "    reflex_scores.append(run_agent(seed, \"Reflex\", 20))\n",
+        "\n",
+        "print(\"Random agent scores:\", random_scores)\n",
+        "print(\"Reflex agent scores:\", reflex_scores)\n",
+        "\n",
+        "print(\"Random agent average:\",\n",
+        "      statistics.mean(random_scores))\n",
+        "\n",
+        "print(\"Reflex agent average:\",\n",
+        "      statistics.mean(reflex_scores))\n"
+      ]
+    }
+  ]
+}
